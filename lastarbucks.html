@@ -1,195 +1,75 @@
 <!DOCTYPE html>
+​
 <html>
-
 <head>
-  <meta charset='utf-8' />
   <title>Studio Week 4</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
-<link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
-<script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
-<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- stylesheet for fonts --->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+   <!-- Adding in the Leaflet CSS file -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://kpecsok98.github.io/studio-week4/MarkerCluster.Default.css" />
+​
+   <!-- Adding Leaflet JavaScript file -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+​
+  <!-- Adding JavaScript library -->
+  <script src="./leaflet-heat.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+​
   <style>
-  body {
-      margin: 0;
-      padding: 0;
-    }
-
     #map {
       position: absolute;
-      top: 250px;
-      bottom: 0;
       width: 100%;
-    }
-
-    /* Popup styling */
-
-    .mapboxgl-popup {
-      padding-bottom: 5px;
-    }
-
-    .mapboxgl-popup-close-button {
-      display: none;
-    }
-
-    .mapboxgl-popup-content {
-      font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
-      padding: 0;
-      width: 250px;
-    }
-
-    .mapboxgl-popup-content-wrapper {
-      padding: 1%;
-    }
-
-    .mapboxgl-popup-content h3 {
-      background: rgb(61, 59, 59);
-      text-align: center;
-      color: #fff;
-      margin: 0;
-      display: block;
-      padding: 15px;
-      font-weight: 700;
-      margin-top: -5px;
-    }
-
-    .mapboxgl-popup-content h4 {
-      margin: 0;
-      display: block;
-      padding: 10px 3px 10px 10px;
-      font-weight: 400;
-    }
-
-    .mapboxgl-container {
-      cursor: pointer;
-    }
-
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
-      margin-top: 3px;
-    }
-
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
-      border-bottom-color: rgb(61, 59, 59);
-    }
+      height: 800px;
+   }
   </style>
-  <!-- Adding styling info for page layout by reading in a CSS file -->
-  <link rel="stylesheet" href="style.css">
-
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
+​
 <body>
-  <h1>Studio Week 4 <br> Google Sheet Map </h1>
-  <!-- Add multiple pages to web page-->
-  <!-- active class displays the grey box around current page-->
-  <ul>
-  	<li><a href="index.html" target="_self">Output 1</a></li>
-    <li><a href="sheetmap.html" target="_self">Output 2</a></li>
-    <li><a class="active" href="lastarbucks.html" target="_self">Output 3</a></li>
-  </ul>
+  <div id="narrative">
+    <h1>Studio Week 4 <br> Rats!!! Featuring Less Horrifying Data </h1>
+​
+   <!-- Add multiple pages to web page-->
+    <ul>
+      <li><a href="index.html" target="_self">Output 1</a></li>
+      <li><a href="sheetmap.html" target="_self">Output 2</a></li>
+      <li><a class="active" href="lastarbucks.html" target="_self">Output 3</a></li>
+    </ul>
+    </div>
+​
   <br>
-
-  <!-- Add a div to give the map somewhere to go -->
-<div id='map'></div>
+  <h2>This map below shows the locations of Starbucks in Los Angeles, California.
+  </h2>
+  <br>
+  <div id="map"></div>
+​
   <script>
-  var transformRequest = (url, resourceType) => {
-  var isMapboxRequest =
-    url.slice(8, 22) === "api.mapbox.com" ||
-    url.slice(10, 26) === "tiles.mapbox.com";
-  return {
-    url: isMapboxRequest
-      ? url.replace("?", "?pluginName=sheetmap&")
-      : url
-  };
-};
-  mapboxgl.accessToken = "pk.eyJ1IjoicmNvcmNvcmFuYWRhbXMiLCJhIjoiY2tub3o4aW0zMDFsejJ3bW9hZWwzcjJ1MyJ9.s8J_Rx1SDZqQfYzc7dAlLw";
-  var map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/mapbox/streets-v11', // YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
-    center: [-118.2437, 34.0522], // starting position [lng, lat]
-    zoom: 10, // starting zoom
-    transformRequest: transformRequest
+  // initalize the map
+  var map = L.map('map').setView([43.92, -72.67], 7);
+​
+  // load base map tile layer.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {
+    attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Data by <a href="http://vtdigger.org">VTDigger</a>',
+    maxZoom: 17,
+    minZoom: 6
+  }).addTo(map);
+​
+$.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function(data){
+  var schoolIcon = L.icon({
+    iconUrl: 'https://rcorcoranadams.github.io/studio-week4/images/coffeecup.png',
+    iconSize: [30,30]
   });
-  $(document).ready(function () {
-  $.ajax({
-    type: "GET",
-    //YOUR TURN: Replace with csv export link my sharing link: https://docs.google.com/spreadsheets/d/14xj7azizks-W2cW5UNh5upOg43bwRsr7SLrN1bKM6is/edit?usp=sharing
-    url: 'https://docs.google.com/spreadsheets/d/15HxSaqNluSnHEhU4mU6UN0AiDrNZn8i4oLO1heM2wzU/edit#gid=1223484669',
-    dataType: "text",
-    success: function (csvData) { makeGeoJSON(csvData); }
-  });
-  function makeGeoJSON(csvData) {
-    csv2geojson.csv2geojson(csvData, {
-      latfield: 'Latitude',
-      lonfield: 'Longitude',
-      delimiter: ','
-    }, function (err, data) {
-      map.on('load', function () {
+    // add GeoJSON layer to the map once the file is loaded
+    var vtccovidschools = L.geoJson(data ,{
+      pointToLayer: function(feature,latlng){
+        var marker = L.marker(latlng,{icon: schoolIcon})
+        marker.bindPopup('<b>School: </b>' + feature.properties.School + '<br/><b>Town: </b>' + feature.properties.Town + '<br/><b> Total Cases From Outbreak: </b>' + feature.properties.Total + '<br/><b> Outbreak Start Date: </b>' + feature.properties.Start_Date + '<br/><b> Outbreak End Date: </b>' + feature.properties.End_Date + '<br/><b> School Type: </b>' + feature.properties.Type)
+        return marker;
+       }
+     } ).addTo(map);
+   });
 
-        //Add the the layer to the map
-        map.addLayer({
-          'id': 'csvData',
-          'type': 'circle',
-          'source': {
-            'type': 'geojson',
-            'data': data
-          },
-          'paint': {
-            'circle-radius': 5,
-            'circle-color': "purple"
-          }
-        });
-
-
-        // When a click event occurs on a feature in the csvData layer, open a popup at the
-        // location of the feature, with description HTML from its properties.
-        map.on('click', 'csvData', function (e) {
-          var coordinates = e.features[0].geometry.coordinates.slice();
-
-          //set popup text
-          //You can adjust the values of the popup to match the headers of your CSV.
-          // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV.
-          var description = `<h3>` + e.features[0].properties.Name + `</h3>` + `<h4>` + `<b>` + `Address: ` + `</b>` + e.features[0].properties.Address + `</h4>` + `<h4>` + `<b>` + `Phone: ` + `</b>` + e.features[0].properties.Phone + `</h4>`;
-
-          // Ensure that if the map is zoomed out such that multiple
-          // copies of the feature are visible, the popup appears
-          // over the copy being pointed to.
-          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-          }
-
-          //add Popup to map
-
-          new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(description)
-            .addTo(map);
-        });
-
-        // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'csvData', function () {
-          map.getCanvas().style.cursor = 'pointer';
-        });
-
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'places', function () {
-          map.getCanvas().style.cursor = '';
-        });
-
-        var bbox = turf.bbox(data);
-        map.fitBounds(bbox, { padding: 50 });
-
-      });
-
-    });
-  };
-});
-
-  </script>
-</body>
-
-</html>
+   </script>
+  </body>
+  </html>
