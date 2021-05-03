@@ -54,7 +54,7 @@
 
   // load GeoJSON from an external file -
    map.setZoom(12)
-  $.getJSON("https://rcorcoranadams.github.io/studio-week4-2020/rodents.geojson",function(data){
+  $.getJSON("https://rcorcoranadams.github.io/studio-week4/rodents.geojson",function(data){
     var locations = data.features.map(function(rat) { //how does this "rat" element work?
       var location = rat.geometry.coordinates.reverse();
       location.push(0.5); //what is this 0.5?
