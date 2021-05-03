@@ -3,6 +3,7 @@
   <title>Studio Week 4!</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <style>
     #map{ height: 100% }
@@ -27,23 +28,18 @@
   // initialize the map
   var map = L.map('map').setView([42.35, -71.08], 13);
   // base map
-  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png', {
-    attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-    maxZoom: 17,
-    minZoom: 9
-  }).addTo(map);
-  // bike lanes
-  L.tileLayer('http://tiles.mapc.org/trailmap-onroad/{z}/{x}/{y}.png',
-  {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 17,
     minZoom: 9
   }).addTo(map);
   // load GeoJSON from an external file
   $.getJSON("rodents.geojson",function(data){
-    var ratIcon = L.icon({
+    /* var ratIcon = L.icon({
       iconUrl: 'rat.png',
       iconSize: [60,50]
     });
+    */
     var rodents = L.geoJson(data,{
       pointToLayer: function(feature,latlng){
         var marker = L.marker(latlng,{icon: ratIcon});
