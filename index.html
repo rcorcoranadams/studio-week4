@@ -1,56 +1,68 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-  <title>Studio Week 4!</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <style>
-    #map{ height: 100% }
+  <title>Studio Four</title>
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script> <!-- reaplaces <script src="./Leaflet.markercluster-1.0.5/leaflet.markercluster.js"></script>  -->
+  <script src="./leaflet-heat.js"></script>
+
+  <style type = "text/css">
   </style>
-  <link rel="stylesheet" href="style.css" />
+  <!-- Adding styling info for page layout by reading in a CSS file -->
+  <link rel="stylesheet" href="style.css"></link>
+
 </head>
-​
 <body>
-  <h1>Studio Week 4 <br> Rats and Less Horrifying Data </h1>
-​
-   <!-- Add multiple pages to web page-->
-  <ul>
-    <li><a class="active" href="index.html" target="_self">Output 1</a></li>
-    <li><a href="sheetmap.html" target="_self">Output 2</a></li>
-    <li><a href="lastarbucks.html" target="_self">Output 3</a></li>
-  </ul>
+  <h1>Studio Week 4 - Rats and More! </h1>
+  <!-- Add multiple pages to web page-->
+  <!-- active class displays the grey box around current page-->
+  <div class="container">
+    <div class="center">
+      <ul>
+        <li><a class="active" href="index.html" target="_self">Output1</a></li>
+        <li><a href="sheetmap.html" target="_self">Output2</a></li>
+        <li><a href="lastarbucks.html" target="_self">Output3</a></li>
+      </ul>
+    </div>
+  </div>
+
   <br>
-​
+  <h2> The map data shows the locations of reported rat signtings around the city of Boston, Massachusetts in 2016.
+  </h2>
+  <br>
+  <h2
+
   <div id="map"></div>
-​
+
   <script>
+
   // initialize the map
   var map = L.map('map').setView([42.35, -71.08], 13);
-  // base map
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 17,
-    minZoom: 9
-  }).addTo(map);
-  // load GeoJSON from an external file
-  $.getJSON("rodents.geojson",function(data){
-    /* var ratIcon = L.icon({
-      iconUrl: 'rat.png',
-      iconSize: [60,50]
+
+  // load a tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 17,
+      minZoom: 9
+    }).addTo(map);
+
+  // load GeoJSON from an external file -
+  $.getJSON("https://rcorcoranadams.github.io/studio-week4-2020/rodents.geojson",function(data){
+    var locations = data.features.map(function(rat) { //how does this "rat" element work?
+      var location = rat.geometry.coordinates.reverse();
+      location.push(0.5); //what is this 0.5?
+      return location;
     });
-    */
-    var rodents = L.geoJson(data,{
-      pointToLayer: function(feature,latlng){
-        var marker = L.marker(latlng,{icon: ratIcon});
-        marker.bindPopup(feature.properties.Location + '<br/>' + feature.properties.OPEN_DT);
-        return marker;
-      }
-    });
-    var clusters = L.markerClusterGroup();
-  clusters.addLayer(rodents);
-  map_s7.addLayer(clusters);
-});
+    var heat = L.heatLayer(locations, { radius: 35, gradient: {0.4: '#ef3b2c', 1: '#99000d'}});
+    map.addLayer(heat);
+  });
+
   </script>
 </body>
 </html>
