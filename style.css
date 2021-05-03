@@ -1,0 +1,62 @@
+body{
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.5s ease;
+  background-color: #7AA10C;
+  margin: 0;
+}
+
+h1{
+  color: #fff;
+  padding-left: 25px;
+  padding-top: 10px;
+}
+
+h2{
+  color: #fff;
+  padding-left: 25px;
+  padding-top: 10px;
+}
+
+ul {
+ list-style-type: none;
+ margin: 1px;
+ padding: 1px;
+ overflow: hidden;
+ background-color: #7AA10C;
+ font-family: 'Montserrat', sans-serif;
+ font-weight: bold;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+li {
+ float: left;
+ border-right: 20px solid #7AA10C;
+}
+
+/* Add a border to all( but not the last) list items */
+li:last-child {
+ border-right: none;
+}
+
+li a {
+ display: block;
+ border-color: white;
+ color: black;
+ text-align: left;
+ color: #fff;
+ padding: 15px 17px;
+ text-decoration: none;
+}
+
+/* Links will change color when hovered over */
+li a:hover {
+ background-color: #0b172a;
+ border-bottom: 2px solid #bc4123;
+}
+
+.active {
+ background-color: #0b172a;
+ border:2px solid #bc4123;
+}
