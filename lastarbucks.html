@@ -46,16 +46,16 @@
   <script>
   // initalize the map
   var map = L.map('map').setView([-118.2437, 34.0522], 7);
-​
   // load base map tile layer.
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
   {
-    attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Data by <a href="http://vtdigger.org">VTDigger</a>',
-   maxZoom: 17,
-   minZoom: 6
- }).addTo(map);
+  attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Data by <a href="http://vtdigger.org">VTDigger</a>',
+  maxZoom: 17,
+  minZoom: 6
+}).addTo(map);
+
 ​
-$.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function(data){
+/*$.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function(data){
   var coffeeIcon = L.icon({
     iconUrl: 'https://rcorcoranadams.github.io/studio-week4/images/coffeecup.png',
     iconSize: [30,30]
@@ -64,7 +64,7 @@ $.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function
     var starbucks = L.geoJson(data ,{
   pointToLayer: function(feature,latlng) {
   } ).addTo(map);
-});
+}); */
    </script>
   </body>
   </html>
