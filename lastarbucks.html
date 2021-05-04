@@ -50,9 +50,10 @@
   // load base map tile layer.
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
   {
-    maxZoom: 19,
     attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Data by <a href="http://vtdigger.org">VTDigger</a>',
-  }).addTo(map);
+   maxZoom: 17,
+   minZoom: 6
+ }).addTo(map);
 ​
 $.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function(data){
   var coffeeIcon = L.icon({
@@ -62,7 +63,8 @@ $.getJSON("https://rcorcoranadams.github.io/studio-week4/laMap.geojson",function
     // add GeoJSON layer to the map once the file is loaded
     var starbucks = L.geoJson(data ,{
   pointToLayer: function(feature,latlng) {
-  }
+  } ).addTo(map);
+});
    </script>
   </body>
   </html>
